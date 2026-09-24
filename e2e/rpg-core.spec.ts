@@ -11,8 +11,8 @@ async function clearRpgSave(page: Page) {
 
 /** 从首页进入 RPG 创建界面 */
 async function goToRpgCreate(page: Page) {
-  await page.goto('/')
-  await page.getByRole('button', { name: /冒险模式|Adventure Mode/ }).click()
+  // 直接 hash 导航：HomeView 的"冒险模式"按钮使用 window.location.hash 跳转会被热火锅 useViewRoute 拦截纠正回 #/home
+  await page.goto('/#/rpg/create')
   await expect(page.getByRole('heading', { name: /创建你的冒险者|Create Your Adventurer/ })).toBeVisible()
 }
 
