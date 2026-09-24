@@ -4,6 +4,8 @@ import { test, expect, type Page } from '@playwright/test'
 
 /** 清除 RPG 存档 */
 async function clearRpgSave(page: Page) {
+  await page.goto('/')
+
   await page.evaluate(() => localStorage.removeItem('rpg-save'))
 }
 
