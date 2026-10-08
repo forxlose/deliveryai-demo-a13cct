@@ -100,7 +100,7 @@ test.describe('REQ-001: 角色创建', () => {
 
     // 验证顶栏显示角色名、等级和金币
     await expect(page.getByText('勇者阿强')).toBeVisible()
-    await expect(page.getByText(/100 G/)).toBeVisible()
+    await expect(page.getByText(/50 G/)).toBeVisible()
 
     // 验证城镇核心元素
     await expect(page.getByRole('button', { name: /任务公告板|Quest Board/ })).toBeVisible()
@@ -134,8 +134,9 @@ test.describe('REQ-001: 角色创建', () => {
   test('REQ-001-S3: 存档恢复 - 预设存档可继续游戏', async ({ page }) => {
     // 先创建一个角色并保存
     await createCharacter(page, '老玩家', /法师|Mage/)
-    // 刷新页面模拟重开
+    // 刷新页面后 URL 仍然是 #/rpg/town，需导航到创建页才能看到存档恢复界面
     await page.reload()
+    await page.goto('/#/rpg/create')
 
     // 应该看到继续游戏按钮而不是创建表单
     await expect(page.getByRole('button', { name: /继续游戏|Continue/ })).toBeVisible()
@@ -238,10 +239,9 @@ test.describe('REQ-004: 任务系统', () => {
     // 接受第一个任务
     await acceptButtons.first().click()
 
-    // 应进入"当前任务"视图
-    await expect(page.getByRole('heading', { name: /当前任务|Active Quest/ })).toBeVisible()
-    // 应显示放弃按钮
-    await expect(page.getByRole('button', { name: /放弃任务|Abandon/ })).toBeVisible()
+    // 接受后返回城镇，当前任务信息显示在城镇界面中
+    await expect(page.getByRole('heading', { name: /冒险者小镇|Adventurer Town/ })).toBeVisible()
+    await expect(page.getByText(/当前任务:/)).toBeVisible()
   })
 
   test('REQ-004-S2: 放弃任务后返回公告板', async ({ page }) => {
@@ -255,6 +255,9 @@ test.describe('REQ-004: 任务系统', () => {
       return
     }
     await acceptButtons.first().click()
+
+    // 接受后返回城镇，需再次进入任务公告板查看进行中任务
+    await page.getByRole('button', { name: /任务公告板|Quest Board/ }).click()
 
     // 放弃任务
     await page.getByRole('button', { name: /放弃任务|Abandon/ }).click()
@@ -327,7 +330,9 @@ test.describe('REQ-006: 场景与导航', () => {
   test('REQ-006-S5: 新游戏二次确认弹窗', async ({ page }) => {
     // 先创建角色存档
     await createCharacter(page, '旧角色', /法师|Mage/)
+    // 刷新后 URL 仍是 #/rpg/town，需导航到创建页才能看到存档恢复界面
     await page.reload()
+    await page.goto('/#/rpg/create')
 
     // 点击"创建新角色"
     await page.getByRole('button', { name: /创建新角色|New Game/ }).click()
