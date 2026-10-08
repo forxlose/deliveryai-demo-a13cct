@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Check, ChevronRight, MapPin, QrCode, Sparkles, Users } from 'lucide-react'
+import { Check, ChevronRight, MapPin, QrCode, Sparkles, Swords, Users } from 'lucide-react'
 import hotpot from '@/assets/hotpot.jpg'
 import { Button } from '@/components/ui/button'
 
@@ -34,6 +34,14 @@ export function HomeView({ onBind }: HomeViewProps) {
             ))}
           </div>
         </section>
+
+        <button
+          onClick={() => { window.location.hash = '#/rpg/create' }}
+          className="mb-6 flex w-full items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-purple-500 to-indigo-600 px-4 py-3 text-white font-bold shadow-lg transition hover:scale-[1.02] hover:shadow-xl"
+        >
+          <Swords size={18} />
+          {t('home.rpg_entry', '冒险模式')}
+        </button>
 
         <section className="animate-rise rounded-3xl border border-white/80 bg-white/90 p-4 shadow-float backdrop-blur sm:p-6">
           <div className="relative mb-6 h-48 overflow-hidden rounded-2xl sm:h-56">

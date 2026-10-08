@@ -34,6 +34,8 @@ interface UseViewRouteOptions {
 export function useViewRoute(view: ViewName, { onNavigate, canView }: UseViewRouteOptions) {
   // 视图 → hash
   useEffect(() => {
+    // RPG 路由交由 RpgApp 内的 useRpgRoute 自行处理，不参与主流程视图同步
+    if (window.location.hash.startsWith('#/rpg')) return
     const target = viewToHash(view)
     if (window.location.hash === target) return
     if (hashToView(window.location.hash)) {
@@ -46,6 +48,8 @@ export function useViewRoute(view: ViewName, { onNavigate, canView }: UseViewRou
   // hash → 视图
   useEffect(() => {
     const handler = () => {
+      // RPG 路由交由 RpgApp 内的 useRpgRoute 自行处理，不参与主流程视图同步
+      if (window.location.hash.startsWith('#/rpg')) return
       const requested = hashToView(window.location.hash)
       const target = requested && (!canView || canView(requested)) ? requested : 'home'
       if (target !== requested) {

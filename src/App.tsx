@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { ClipboardList, ConciergeBell, LayoutDashboard, Menu as MenuIcon, ShoppingBasket } from 'lucide-react'
 import { HomeView } from '@/components/HomeView'
 import { WelcomeView } from '@/components/WelcomeView'
+import { RpgApp } from '@/rpg/components/RpgApp'
 import { CartPanel } from '@/components/CartPanel'
 import { CheckoutView } from '@/components/CheckoutView'
 import { DemoConsole } from '@/components/DemoConsole'
@@ -48,6 +49,7 @@ function createInitialState(): AppState {
 
 export default function App() {
   const { t, i18n } = useTranslation()
+
   const [state, dispatch] = useReducer(orderReducer, undefined, createInitialState)
   const { enabled: elderly, toggle: toggleElderly } = useElderlyMode()
   const [serviceOpen, setServiceOpen] = useState(false)
@@ -84,6 +86,10 @@ export default function App() {
   const handleToggleElderly = () => {
     toggleElderly()
     dispatch({ type: 'SET_MESSAGE', message: elderly ? '已切换为常规模式' : '已切换为老人模式' })
+  }
+
+  if (window.location.hash.startsWith('#/rpg')) {
+    return <RpgApp />
   }
 
   if (state.view === 'home' || !state.table) {
