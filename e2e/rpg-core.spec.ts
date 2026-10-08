@@ -5,8 +5,11 @@ import { test, expect, type Page } from '@playwright/test'
 /** 清除 RPG 存档 */
 async function clearRpgSave(page: Page) {
   await page.goto('/')
-
   await page.evaluate(() => localStorage.removeItem('rpg-save'))
+  // 导航到空白页，确保后续 page.goto 到 RPG hash 路由是完整页面加载而非 hash-only 变更。
+  // 若直接从 /#/home 等地址 page.goto('/#/rpg/create')，浏览器只触发 hashchange，
+  // React 不重渲染，App.tsx 的 RPG hash 守卫不会被重新评估，页面仍停留在 HomeView。
+  await page.goto('about:blank')
 }
 
 /** 从首页进入 RPG 创建界面 */
